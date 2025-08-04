@@ -3,14 +3,14 @@
 import React, { useEffect, useState } from "react";
 import SubTitle from "../title/SubTitle";
 import BotItem from "./BotItem";
+import { getBot } from "@/utils/bot";
 
 function BotCard({ botRefreshTrigger }) {
   const [bots, setBots] = useState([]);
 
   const fetchBots = async () => {
     try {
-      const res = await fetch("/api/bots/get");
-      const data = await res.json();
+      const data = await getBot();
       setBots(data);
     } catch (err) {
       console.error("Failed to fetch bots:", err);

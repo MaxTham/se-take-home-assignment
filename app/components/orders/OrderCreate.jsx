@@ -2,56 +2,53 @@
 
 import React, { useState } from "react";
 import SuccessModal from "../modals/SuccessModel";
-import {createBot} from "@/utils/bot";
+import { createOrder } from "@/utils/order";
 
-function BotCreate({ isOpen, onClose, onSuccess }) {
-  const [botName, setBotName] = useState("");
-  const [successData, setSuccessData] = useState(null);
+function OrderCreate({ isOpen, onClose, onSuccess, orderType }) {
+  const [orderDetails, setOrderDetails] = useState("");
   const [isCreating, setIsCreating] = useState(false);
+  const [successData, setSuccessData] = useState(null);
 
   const handleSubmit = async () => {
-    if (!botName.trim()) return;
-    setIsCreating(true);
+    if (!orderDetails.trim()) return;
 
+    setIsCreating(true);
     try {
-      const data = await createBot(botName);
+      const data = await createOrder(orderDetails, orderType);
       if (data.success) {
-        setSuccessData(data); // Triggers SuccessModal
-        setBotName("");
+        setSuccessData(data);
+        setOrderDetails("");
       } else {
-        alert("Failed to create bot.");
+        alert("Failed to create order.");
       }
     } catch (err) {
-      console.error("Error creating bot:", err);
+      console.error("Error creating order:", err);
       alert("Server error.");
     } finally {
       setIsCreating(false);
     }
   };
 
-  // Don’t render the creation modal if it's not open
   if (!isOpen && !successData) return null;
 
   return (
     <>
-      {/* Creation Modal */}
       {isOpen && !successData && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[400px]">
-            <h2 className="text-xl font-bold mb-4">Create New Bot</h2>
-
+            <h2 className="text-xl font-bold mb-4">New {orderType} Order</h2>
             <input
-              value={botName}
-              onChange={(e) => setBotName(e.target.value)}
-              placeholder="Enter bot name"
+              value={orderDetails}
+              onChange={(e) => setOrderDetails(e.target.value)}
+              placeholder="Enter order details"
               className="w-full border border-gray-300 rounded p-2 mb-4"
             />
 
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => {
-                  setBotName(""); // Clear input
-                  onClose(); // Close modal
+                  setOrderDetails("");
+                  onClose();
                 }}
                 className="px-4 py-2 rounded bg-gray-200 text-black cursor-pointer"
                 disabled={isCreating}
@@ -70,13 +67,12 @@ function BotCreate({ isOpen, onClose, onSuccess }) {
         </div>
       )}
 
-      {/* Success Modal (only shown after successful creation) */}
       {successData && (
         <SuccessModal
           message={successData.message}
           onClose={() => {
-            setSuccessData(null); // Clear success message
-            onClose(); // Only close after modal is dismissed
+            setSuccessData(null);
+            onClose();
             onSuccess();
           }}
         />
@@ -85,4 +81,4 @@ function BotCreate({ isOpen, onClose, onSuccess }) {
   );
 }
 
-export default BotCreate;
+export default OrderCreate;

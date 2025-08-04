@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import SuccessModal from "../modals/SuccessModel";
+import { deleteBot } from "@/utils/bot";
 
 function BotDelete({ isOpen, onClose, onSuccess }) {
   const [botID, setBotID] = useState("");
@@ -24,15 +25,7 @@ function BotDelete({ isOpen, onClose, onSuccess }) {
     setIsDeleting(true);
 
     try {
-      const res = await fetch("/api/bots/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ botID: Number(botID) }),
-      });
-
-      const data = await res.json();
+      const data = await deleteBot(botID);
       if (data.success) {
         setSuccessData(data);
         setBotID("");
