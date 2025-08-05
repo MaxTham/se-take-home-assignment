@@ -6,7 +6,7 @@ export async function GET(request) {
     const db = client.db(process.env.MONGODB_DB)
 
     const data = await db.collection('Bots')
-      .find({}, { projection: { _id: 0, botName: 1, botStatus: 1, botID: 1 } })
+      .find({}, { projection: { _id: 0, botName: 1, botStatus: 1, botID: 1, botTask: 1, botTaskType:1 } })
       .toArray()
 
     return new Response(JSON.stringify(data), {

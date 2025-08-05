@@ -28,12 +28,16 @@ export async function POST(request) {
     const botsCollection = db.collection("Bots");
     const botID = await getNextBotID(db);
     const botStatus = "active";
+    const botTask = "IDLE";
+    const botTaskType = null;
 
     const result = await botsCollection.insertOne({
       botName,
       botStatus,
       botID,
       createdAt: new Date(),
+      botTask,
+      botTaskType
     });
 
     return new Response(

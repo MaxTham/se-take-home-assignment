@@ -2,9 +2,9 @@
 import React from "react";
 
 function BotItem({ bot }) {
-  const taskInfo = bot.botTask || null;
+  const taskType = (bot.botTaskType == 1)? "VIP":"Normal";
+  const taskInfo = (bot.botTask=="IDLE") ? "IDLE" : `Order #${bot.botTask} (${taskType})`;
   const isBusy = !!taskInfo;
-  const progress = isBusy ? 50 : null; // placeholder
 
   return (
     <div
@@ -17,25 +17,9 @@ function BotItem({ bot }) {
           {bot.botName} #{bot.botID}
         </p>
         <p className="text-[#8a8060] text-sm font-normal leading-normal line-clamp-2">
-          {taskInfo || "No ongoing order"}
+          {taskInfo}
         </p>
       </div>
-
-      {isBusy && (
-        <div className="shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-[88px] overflow-hidden rounded-sm bg-[#e6e3db]">
-              <div
-                className="h-1 rounded-full bg-[#181611]"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-            <p className="text-[#181611] text-sm font-medium leading-normal">
-              {progress}
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

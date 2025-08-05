@@ -3,9 +3,14 @@
 import React, { useEffect, useState } from "react";
 import SubTitle from "../title/SubTitle";
 import OrderItem from "./OrderItem";
-import { getPendingOrder, getCompleteOrder } from "@/utils/order";
+import {
+  getPendingOrder,
+  getCompleteOrder,
+  assignOrder,
+  completeOrder,
+} from "@/utils/order";
 
-function OrderCard({ orderRefreshTrigger }) {
+function OrderCard({ orderRefreshTrigger, botRefresh }) {
   const [pendingOrders, setPendingOrders] = useState([]);
   const [completedOrders, setCompletedOrders] = useState([]);
 
@@ -21,8 +26,29 @@ function OrderCard({ orderRefreshTrigger }) {
     }
   };
 
+  const assignTask = async () => {
+    if (pendingOrders.length > 0) {
+      const data = await assignOrder();
+      if (data.success) {
+        fetchOrders();
+        botRefresh();
+        setTimeout(async () => {
+          const completeData = await completeOrder(
+            data.assignedOrderID,
+            data.assignedBotID
+          );
+          if (completeData.success) {
+            fetchOrders(); // refresh after completing
+            botRefresh();
+          }
+        }, 10000);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
+    assignTask();
   }, [orderRefreshTrigger]);
 
   return (
@@ -35,9 +61,10 @@ function OrderCard({ orderRefreshTrigger }) {
           </p>
         </div>
       ) : (
+        (assignTask(),
         pendingOrders.map((order) => (
           <OrderItem key={order.orderID} order={order} />
-        ))
+        )))
       )}
 
       <SubTitle title="COMPLETED Orders" />
