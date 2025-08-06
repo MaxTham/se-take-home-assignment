@@ -20,7 +20,11 @@ export async function POST() {
     }
 
     // 2. Get an available bot
-    const availableBot = await botsCol.findOne({ botStatus: "active" });
+    const availableBot = await botsCol
+      .find({ botStatus: "active" })
+      .sort({ orderID: 1 }) // Sort by orderID descending (highest first)
+      .limit(1)
+      .next();
 
     if (!availableBot) {
       return new Response(JSON.stringify({ message: "No available bots" }), {
