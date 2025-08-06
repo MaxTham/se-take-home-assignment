@@ -1,7 +1,8 @@
 import clientPromise from "@/utils/mongodb";
 
 async function getNextOrderID(db) {
-  const lastOrder = await db.collection("Orders")
+  const lastOrder = await db
+    .collection("Orders")
     .find({})
     .sort({ orderID: -1 })
     .limit(1)
@@ -13,12 +14,15 @@ async function getNextOrderID(db) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { orderDetails, orderType } = body;
+    const { orderType } = body;
 
-    if (!orderDetails) {
-      return new Response(JSON.stringify({ error: "Missing order details" }), {
-        status: 400,
-      });
+    if (!orderType) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Missing order type" }),
+        {
+          status: 400,
+        }
+      );
     }
 
     const client = await clientPromise;
@@ -28,7 +32,6 @@ export async function POST(request) {
     const orderStatus = "Pending";
     const result = await ordersCollection.insertOne({
       orderID,
-      orderDetails,
       orderType,
       orderStatus,
       createdAt: new Date(),
@@ -37,7 +40,7 @@ export async function POST(request) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Order ${orderID} added into pending order list`,
+        message: `Order #${orderID} added into pending order list`,
         botId: result.orderID,
       }),
       {
@@ -45,8 +48,8 @@ export async function POST(request) {
       }
     );
   } catch (error) {
-    console.error("[POST /api/orders/vip/create] Error:", error);
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+    console.error("[POST /api/orders/create] Error:", error);
+    return new Response(JSON.stringify({success:false, error: "Internal Server Error" }), {
       status: 500,
     });
   }

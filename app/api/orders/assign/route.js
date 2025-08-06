@@ -42,7 +42,7 @@ export async function POST() {
 
     await ordersCol.updateOne(
       { orderID: pendingOrder.orderID },
-      { $set: { orderStatus: "Processing" } }
+      { $set: { orderStatus: "Processing", updatedAt: new Date() } }
     );
 
     return new Response(

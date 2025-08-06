@@ -1,7 +1,8 @@
-import clientPromise from '@/utils/mongodb'
+import clientPromise from "@/utils/mongodb";
 
 async function getNextBotID(db) {
-  const lastBot = await db.collection("Bots")
+  const lastBot = await db
+    .collection("Bots")
     .find({})
     .sort({ botID: -1 })
     .limit(1)
@@ -10,19 +11,8 @@ async function getNextBotID(db) {
   return lastBot.length === 0 ? 1 : lastBot[0].botID + 1;
 }
 
-
-export async function POST(request) {
+export async function POST() {
   try {
-    const body = await request.json();
-    const { botName } = body;
-
-    if (!botName) {
-      return new Response(
-        JSON.stringify({ error: "Missing botName" }),
-        { status: 400 }
-      );
-    }
-
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
     const botsCollection = db.collection("Bots");
@@ -31,19 +21,18 @@ export async function POST(request) {
     const botTask = "IDLE";
     const botTaskType = null;
 
-    const result = await botsCollection.insertOne({
-      botName,
+    await botsCollection.insertOne({
       botStatus,
       botID,
       createdAt: new Date(),
       botTask,
-      botTaskType
+      botTaskType,
     });
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Bot ${botName} #${botID} created successfully`,
+        message: `Bot #${botID} created successfully`,
         botId: botID,
       }),
       { status: 201 }
@@ -51,8 +40,10 @@ export async function POST(request) {
   } catch (error) {
     console.error("[POST /api/bot/create] Error:", error);
     return new Response(
-      JSON.stringify({ error: "Internal Server Error" }),
-      { status: 500 }
+      JSON.stringify({ success: false, error: "Internal Server Error" }),
+      {
+        status: 500,
+      }
     );
   }
 }

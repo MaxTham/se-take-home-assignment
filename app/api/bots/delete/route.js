@@ -1,27 +1,26 @@
 import clientPromise from "@/utils/mongodb";
 
-export async function DELETE(request) {
+export async function DELETE() {
   try {
-    const body = await request.json();
-    const { botID } = body;
-
-    if (!botID) {
-      return new Response(JSON.stringify({ error: "Missing botID" }), {
-        status: 400,
-      });
-    }
-
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
     const botsCol = db.collection("Bots");
     const ordersCol = db.collection("Orders");
 
-    // find targted bot
-    const targetBot = await botsCol.findOne({ botID: botID });
+    // find targeted bot
+    const targetBot = await botsCol
+      .find({})
+      .sort({ botID: -1 }) // Sort descending by botID
+      .limit(1)
+      .next(); // Get the first document from the cursor
+
     if (!targetBot) {
-      return new Response(JSON.stringify({ message: "No available bots" }), {
-        status: 200,
-      });
+      return new Response(
+        JSON.stringify({ success: false, error: "No available bots" }),
+        {
+          status: 200,
+        }
+      );
     }
     if (targetBot.botStatus == "processing") {
       const processingOrder = await ordersCol.findOne({
@@ -35,11 +34,14 @@ export async function DELETE(request) {
       }
     }
 
-    const result = await botsCol.deleteOne({ botID: botID });
+    const result = await botsCol.deleteOne({ botID: targetBot.botID });
 
     if (result.deletedCount === 0) {
       return new Response(
-        JSON.stringify({ error: `Bot with botID ${botID} not found` }),
+        JSON.stringify({
+          success: false,
+          error: `Bot with botID ${targetBot.botID} not found`,
+        }),
         { status: 404 }
       );
     }
@@ -47,7 +49,7 @@ export async function DELETE(request) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Bot with Bot ID {${botID}} deleted successfully`,
+        message: `Bot #${targetBot.botID} deleted successfully`,
       }),
       {
         status: 200,
@@ -55,8 +57,11 @@ export async function DELETE(request) {
     );
   } catch (error) {
     console.error("[DELETE /api/bot/delete] Error:", error);
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ success: false, error: "Internal Server Error" }),
+      {
+        status: 500,
+      }
+    );
   }
 }

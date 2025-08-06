@@ -1,20 +1,16 @@
-export const createBot  = async (botName) =>{
+export const createBot  = async () =>{
     const res = await fetch("/api/bots/create", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ botName }),
   });
-
   return res.json();
 }
 
-export const deleteBot = async (botID) => {
+export const deleteBot = async () => {
   const res = await fetch("/api/bots/delete", {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ botID: Number(botID) }),
   });
-
   return res.json();
 };
 

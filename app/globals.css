@@ -1,8 +1,1 @@
 @import "tailwindcss";
-
-@theme {
-  --color-button-yellow: #f2b80c;
-  --color-button-grey: ##f4f3ef;
-  --color-card-grey:#ebeef3;
-  --color-txtBlack:#181611;
-}

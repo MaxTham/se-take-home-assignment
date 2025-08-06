@@ -10,12 +10,12 @@ export async function POST(req) {
 
     await ordersCol.updateOne(
       { orderID },
-      { $set: { orderStatus: "Complete" } }
+      { $set: { orderStatus: "Complete", updatedAt: new Date() } }
     );
 
     await botsCol.updateOne(
       { botID },
-      { $set: { botStatus: "active", botTask: "IDLE", botTaskType:null } }
+      { $set: { botStatus: "active", botTask: "IDLE", botTaskType: null } }
     );
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
