@@ -95,16 +95,34 @@ Provides logic for resetting database state
 
 ## API Route (/app/api)
 
-/api
-├── bots/
-│ ├── create/ → POST endpoint to create a new bot
-│ ├── delete/ → DELETE endpoint to delete a bot
-│ ├── edit/ → POST endpoint to edit bot properties
-│ └── get/ → GET endpoint to retrieve bots
-├── orders/
-│ ├── assign/ → POST to assign a bot to an order
-│ ├── complete/ → POST to mark an order as complete
-│ ├── create/ → POST to create a new order
-│ ├── edit/ → POST to update an order
-│ ├── get/ → GET to retrieve pending/complete orders
-│ └── reset/ → POST to reset/clear orders and bots status
+### Bot Endpoints (/api/bots)
+1. POST /api/bots/create
+ Create a new bot.
+
+2. DELETE /api/bots/delete
+ Delete a specific bot.
+
+3. POST /api/bots/edit
+ Update bot properties (e.g., name, status).
+
+4. GET /api/bots/get
+ Retrieve all bots.
+
+### Order Endpoints (/api/orders)
+1. POST /api/orders/assign
+ Assign a bot to an order.
+
+2. POST /api/orders/complete
+ Mark an order as completed.
+
+3. POST /api/orders/create
+ Create a new order.
+
+4. POST /api/orders/edit
+ Update order details.
+
+5. GET /api/orders/get
+ Retrieve pending or completed orders.
+
+6. POST /api/orders/reset
+ Reset all orders and bot status
