@@ -28,7 +28,7 @@ git clone https://github.com/MaxTham/se-take-home-assignment.git
  npm install
 ```
 
-3.**Edit the environment variables in .env.local file**
+3.**Edit the environment variables in .env.local file**<br>
 4.**Run the program**
 
 ```bash
