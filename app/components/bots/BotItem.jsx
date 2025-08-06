@@ -14,7 +14,7 @@ function BotItem({ bot }) {
     >
       <div className="flex flex-col justify-center">
         <p className="text-[#181611] text-base font-medium leading-normal line-clamp-1">
-          {bot.botName} #{bot.botID}
+          Bot #{bot.botID}
         </p>
         <p className="text-[#8a8060] text-sm font-normal leading-normal line-clamp-2">
           {taskInfo}
