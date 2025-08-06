@@ -1,38 +1,110 @@
-## FeedMe Software Engineer Take Home Assignment
-Below is a take home assignment before the interview of the position. You are required to
-1. Understand the situation and use case. You may contact the interviewer for further clarification.
-2. Fork this repo and implement the requirement with your most familiar tools.
-3. Complete the requirement and perform your own testing.
-4. Provide documentation for the any part that you think is needed.
-5. Commit into your own github and share your repo with the interviewer.
-6. Bring the source code and functioning prototype to the interview session.
+## Documentation for Feedme Software Engineer Take Home Assignment
 
-### Situation
-McDonald is transforming their business during COVID-19. They wish to build the automated cooking bots to reduce workforce and increase their efficiency. As one of the software engineer in the project. You task is to create an order controller which handle the order control flow. 
+### Tech Stack
 
-### User Story
-As below is part of the user story:
-1. As McDonald's normal customer, after I submitted my order, I wish to see my order flow into "PENDING" area. After the cooking bot process my order, I want to see it flow into to "COMPLETE" area.
-2. As McDonald's VIP member, after I submitted my order, I want my order being process first before all order by normal customer.  However if there's existing order from VIP member, my order should queue behind his/her order.
-3. As McDonald's manager, I want to increase or decrease number of cooking bot available in my restaurant. When I increase a bot, it should immediately process any pending order. When I decrease a bot, the processing order should remain un-process.
-4. As McDonald bot, it can only pickup and process 1 order at a time, each order required 10 seconds to complete process.
+Frontend: Next.js, React, TailwindCSS
 
-### Requirements
-1. When "New Normal Order" clicked, a new order should show up "PENDING" Area.
-2. When "New VIP Order" clicked, a new order should show up in "PENDING" Area. It should place in-front of all existing "Normal" order but behind of all existing "VIP" order./
-3. The order number should be unique and increasing.
-4. When "+ Bot" clicked, a bot should be created and start processing the order inside "PENDING" area. after 10 seconds picking up the order, the order should move to "COMPLETE" area. Then the bot should start processing another order if there is any left in "PENDING" area.
-5. If there is no more order in the "PENDING" area, the bot should become IDLE until a new order come in.
-6. When "- Bot" clicked, the newest bot should be destroyed. If the bot is processing an order, it should also stop the process. The order now back to "PENDING" and ready to process by other bot.
-7. No data persistance is needed for this prototype, you may perform all the process inside memory.
+Backend: Next.js API Routes
 
-### Functioning Prototype
-You may demonstrate your final functioning prototype with **one and only one** of the following method:
-- CLI application
-- UI application
-- E2E test case
+DB: MongoDB
 
-### Tips on completing this task
-- Testing, testing and testing. Make sure the prototype is functioning and meeting all the requirements.
-- Do not over engineering. Try to scope your working hour within 3 hours (1 hour per day). You may document all the optimization or technology concern that you think good to bring in the solution.
-- Complete the implementation as clean as possible, clean code is a strong plus point, do not bring in all the fancy tech stuff.
+State Management: useState / useEffect
+
+## Setup Instruction
+
+1. Clone the project from the repository
+
+```bash
+git clone https://github.com/MaxTham/se-take-home-assignment.git
+```
+
+2.Install dependency
+
+```bash
+ npm install
+```
+
+3. Edit the environment variables in .env.local file
+   4.Run the program
+
+```bash
+npm run dev
+```
+
+## Features
+
+✅ Create & delete bots
+
+✅ Create VIP and Normal orders
+
+✅ Real-time UI update
+
+✅ Pop-up feedback modals (success/error)
+
+## Components
+
+### components/bots/
+
+1.BotCard.jsx
+Displays a list or grid of all bot instances. Reacts to refresh triggers to re-fetch bot data.
+
+2.BotItem.jsx
+Represents a single bot in the list. Handles display logic for individual bot attributes.
+
+### components/control/
+
+1.ControlCard.jsx
+Main control panel with buttons to: create/delete bots, and create new orders. Also handles action feedback via pop-up modals.
+
+### components/modals/
+
+1.PopUpModal.jsx
+A reusable modal popup component for showing success or error messages. Used in ControlCard. Auto-dismisses after a few seconds.
+
+###components/orders/
+1.OrderCard.jsx
+Displays the current list of orders, both pending and completed. Refreshes when orderRefreshTrigger updates.
+
+2.OrderItem.jsx
+Represents an individual order. Handles UI for order details and interactions like assign or complete.
+
+### components/title/
+
+1.Header.jsx
+Top-level page header.
+
+2.MainTitle.jsx
+Main page title shown in the dashboard.
+
+3.SubTitle.jsx
+Subheading component for use under titles
+
+## Utilities (/utils)
+
+1.bot.js
+Handles all bot-related backend logic: create, delete, fetch, and update bots in the database.
+
+2.mongodb.js
+Exports a clientPromise to connect to the MongoDB instance. Used as the base connector for all DB operations.
+
+3.order.js
+Manages order-related logic: create, assign, complete, and fetch orders from the database.
+
+4.reset.js
+Provides logic for resetting database state
+
+## API Route (/app/api)
+
+/api
+├── bots/
+│ ├── create/ → POST endpoint to create a new bot
+│ ├── delete/ → DELETE endpoint to delete a bot
+│ ├── edit/ → POST endpoint to edit bot properties
+│ └── get/ → GET endpoint to retrieve bots
+├── orders/
+│ ├── assign/ → POST to assign a bot to an order
+│ ├── complete/ → POST to mark an order as complete
+│ ├── create/ → POST to create a new order
+│ ├── edit/ → POST to update an order
+│ ├── get/ → GET to retrieve pending/complete orders
+│ └── reset/ → POST to reset/clear orders and bots status
