@@ -19,7 +19,7 @@ As below is part of the user story:
 
 ### Requirements
 1. When "New Normal Order" clicked, a new order should show up "PENDING" Area.
-2. When "New VIP Order" clicked, a new order should show up in "PENDING" Area. It should place in-front of all existing "Normal" order but behind of all existing "VIP" order.
+2. When "New VIP Order" clicked, a new order should show up in "PENDING" Area. It should place in-front of all existing "Normal" order but behind of all existing "VIP" order./
 3. The order number should be unique and increasing.
 4. When "+ Bot" clicked, a bot should be created and start processing the order inside "PENDING" area. after 10 seconds picking up the order, the order should move to "COMPLETE" area. Then the bot should start processing another order if there is any left in "PENDING" area.
 5. If there is no more order in the "PENDING" area, the bot should become IDLE until a new order come in.
@@ -27,7 +27,7 @@ As below is part of the user story:
 7. No data persistance is needed for this prototype, you may perform all the process inside memory.
 
 ### Functioning Prototype
-You may demostrate your final funtioning prototype with **one and only one** of the following method:
+You may demonstrate your final functioning prototype with **one and only one** of the following method:
 - CLI application
 - UI application
 - E2E test case
