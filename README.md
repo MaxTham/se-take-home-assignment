@@ -16,7 +16,7 @@ useState / useEffect
 
 ## Setup Instruction
 
-1. **Clone the project from the repository**
+1.**Clone the project from the repository**
 
 ```bash
 git clone https://github.com/MaxTham/se-take-home-assignment.git
@@ -28,7 +28,7 @@ git clone https://github.com/MaxTham/se-take-home-assignment.git
  npm install
 ```
 
-3. **Edit the environment variables in .env.local file** 
+3.**Edit the environment variables in .env.local file**
 4.**Run the program**
 
 ```bash
@@ -75,7 +75,7 @@ Represents an individual order. Handles UI for order details and interactions li
 
 ### components/title/
 
-1. **Header.jsx**  
+1.**Header.jsx**  
    Top-level page header.
 
 2.**MainTitle.jsx**
@@ -105,31 +105,31 @@ Provides logic for resetting database state
 1.**POST /api/bots/create**
  Create a new bot.
 
-2. **DELETE /api/bots/delete**
+2.**DELETE /api/bots/delete**
     Delete a specific bot.
 
-3. **POST /api/bots/edit**
+3.**POST /api/bots/edit**
     Update bot properties (e.g., name, status).
 
-4. **GET /api/bots/get**
+4.**GET /api/bots/get**
     Retrieve all bots.
 
 ### Order Endpoints (/api/orders)
 
-1. **POST /api/orders/assign**
+1.**POST /api/orders/assign**
     Assign a bot to an order.
 
-2. **POST /api/orders/complete**
+2.**POST /api/orders/complete**
     Mark an order as completed.
 
-3. **POST /api/orders/create**
+3.**POST /api/orders/create**
     Create a new order.
 
-4. **POST /api/orders/edit**
+4.**POST /api/orders/edit**
     Update order details.
 
-5. **GET /api/orders/get**
+5.**GET /api/orders/get**
     Retrieve pending or completed orders.
 
-6. **POST /api/orders/reset**
+6.**POST /api/orders/reset**
     Reset all orders and bot status
