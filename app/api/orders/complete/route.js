@@ -1,22 +1,32 @@
-import clientPromise from "@/utils/mongodb";
+// app/api/orders/complete/route.js
+import { updateOrderStatus, getBots } from "@/utils/mockDb";
 
 export async function POST(req) {
   try {
     const { orderID, botID } = await req.json();
-    const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB);
-    const ordersCol = db.collection("Orders");
-    const botsCol = db.collection("Bots");
+    const bot = getBots().find((b) => b.botID === botID);
 
-    await ordersCol.updateOne(
-      { orderID },
-      { $set: { orderStatus: "Complete", updatedAt: new Date() } }
-    );
+    if (!bot || bot.botTask !== orderID) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Order no longer assigned to this bot",
+        }),
+        { status: 400 }
+      );
+    }
 
-    await botsCol.updateOne(
-      { botID },
-      { $set: { botStatus: "active", botTask: "IDLE", botTaskType: null } }
-    );
+    bot.botStatus = "active";
+    bot.botTask = "IDLE";
+    bot.botTaskType = null;
+
+    const orderUpdated = updateOrderStatus(orderID, "Complete");
+
+    if (!orderUpdated) {
+      return new Response(JSON.stringify({ error: "Order not found" }), {
+        status: 404,
+      });
+    }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (err) {

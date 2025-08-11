@@ -1,4 +1,4 @@
-import clientPromise from "@/utils/mongodb";
+import { getOrders } from "@/utils/mockDb";
 
 export async function GET(req) {
   try {
@@ -12,22 +12,23 @@ export async function GET(req) {
       });
     }
 
-    const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB);
-    const ordersCollection = db.collection("Orders");
+    const orders = getOrders()
+      .filter(order => order.orderStatus === orderStatus)
+      .sort((a, b) => {
+        if (a.orderType < b.orderType) return -1;
+        if (a.orderType > b.orderType) return 1;
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      });
 
-    const orders = await ordersCollection
-      .find({ orderStatus })
-      .sort({ orderType: 1, createdAt: 1 }) // optional: newest first
-      .toArray();
-
-    return new Response(JSON.stringify({ success: true, data: orders }), {
-      status: 200,
-    });
+    return new Response(
+      JSON.stringify({ success: true, data: orders }),
+      { status: 200 }
+    );
   } catch (error) {
     console.error("[GET /api/orders/get] Error:", error);
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ error: "Internal Server Error" }),
+      { status: 500 }
+    );
   }
 }

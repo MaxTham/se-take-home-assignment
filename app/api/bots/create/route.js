@@ -1,33 +1,21 @@
-import clientPromise from "@/utils/mongodb";
-
-async function getNextBotID(db) {
-  const lastBot = await db
-    .collection("Bots")
-    .find({})
-    .sort({ botID: -1 })
-    .limit(1)
-    .toArray();
-
-  return lastBot.length === 0 ? 1 : lastBot[0].botID + 1;
-}
+import {getNextBotID, insertBot} from "@/utils/mockDb"; // Use mock DB for testing
 
 export async function POST() {
-  try {
-    const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB);
-    const botsCollection = db.collection("Bots");
-    const botID = await getNextBotID(db);
+   try {
+    const botID = await getNextBotID();
     const botStatus = "active";
     const botTask = "IDLE";
     const botTaskType = null;
 
-    await botsCollection.insertOne({
+    const bot = {
       botStatus,
       botID,
       createdAt: new Date(),
       botTask,
       botTaskType,
-    });
+    };
+
+    await insertBot(bot);
 
     return new Response(
       JSON.stringify({
@@ -38,12 +26,10 @@ export async function POST() {
       { status: 201 }
     );
   } catch (error) {
-    console.error("[POST /api/bot/create] Error:", error);
+    console.error("[POST /api/bots/create] Error:", error);
     return new Response(
       JSON.stringify({ success: false, error: "Internal Server Error" }),
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }

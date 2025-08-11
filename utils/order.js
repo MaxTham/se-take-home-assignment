@@ -40,12 +40,3 @@ export const completeOrder = async (orderID, botID) => {
   });
   return res.json();
 };
-
-export const resetOrder = async () => {
-  const res = await fetch("/api/orders/reset", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
-
-  return res.json();
-};

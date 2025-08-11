@@ -4,7 +4,7 @@ import PopUpModal from "../modals/PopUpModal";
 import { createBot, deleteBot } from "@/utils/bot";
 import { createOrder } from "@/utils/order";
 
-function ControlCard({ onBotCreated, onOrderCreated }) {
+function ControlCard({ onBotCreated, onOrderCreated,onBotDeleted }) {
   const [modalActionMessage, setModalActionMessage] = useState(null);
   const [modalActionType, setModalActionType] = useState("success");
   const createNewBot = async () => {
@@ -28,6 +28,13 @@ function ControlCard({ onBotCreated, onOrderCreated }) {
       setModalActionMessage(data.message);
       onOrderCreated();
       onBotCreated();
+
+      // Extract botID from message and trigger clearTimeout
+      const botID = parseInt(data.message.match(/#(\d+)/)?.[1], 10);
+      if (!isNaN(botID) && onBotDeleted) {
+        onBotDeleted(botID);
+      }
+
       autoDismissMessage();
     } else {
       setModalActionType("error");
